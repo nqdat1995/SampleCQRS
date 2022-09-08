@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SampleCQRSApplication.Data.Repository
 {
     public interface ITeamRepository : IGenericRepository<Team> { }
-    internal class TeamRepository : GenericRepository<Team>, ITeamRepository
+    public class TeamRepository : GenericRepository<Team>, ITeamRepository
     {
         public TeamRepository(AppDBContext context) : base(context)
         {

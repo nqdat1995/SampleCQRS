@@ -22,6 +22,29 @@ namespace SampleCQRSApplication.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Bets");
+                });
+
             modelBuilder.Entity("SampleCQRSApplication.DTO.Match", b =>
                 {
                     b.Property<int>("Id")
@@ -30,37 +53,37 @@ namespace SampleCQRSApplication.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AwayTeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HomeTeamId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("MatchDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("RateTeamA")
+                    b.Property<float>("RateAwayTeam")
                         .HasColumnType("real");
 
-                    b.Property<float>("RateTeamB")
+                    b.Property<float>("RateHomeTeam")
                         .HasColumnType("real");
 
                     b.Property<int>("RoundId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScoreTeamA")
+                    b.Property<int>("ScoreAwayTeam")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScoreTeamB")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamAId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamBId")
+                    b.Property<int>("ScoreHomeTeam")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AwayTeamId");
+
+                    b.HasIndex("HomeTeamId");
+
                     b.HasIndex("RoundId");
-
-                    b.HasIndex("TeamAId");
-
-                    b.HasIndex("TeamBId");
 
                     b.ToTable("Matches");
                 });
@@ -77,9 +100,36 @@ namespace SampleCQRSApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RoundId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Round");
+                    b.HasIndex("RoundId");
+
+                    b.ToTable("Rounds");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Season", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SeasonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeasonId");
+
+                    b.ToTable("Seasons");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
@@ -107,36 +157,179 @@ namespace SampleCQRSApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Tournament", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("Tournaments");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("RoundId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TournamentRounds");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentSeason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("SeasonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TournamentSeasons");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentTeam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TournamentTeams");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.DTO.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SampleCQRSApplication.DTO.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("SampleCQRSApplication.DTO.Match", b =>
                 {
+                    b.HasOne("SampleCQRSApplication.DTO.Team", "AwayTeam")
+                        .WithMany("AwayMatches")
+                        .HasForeignKey("AwayTeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SampleCQRSApplication.DTO.Team", "HomeTeam")
+                        .WithMany("HomeMatches")
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("SampleCQRSApplication.DTO.Round", "Round")
                         .WithMany("Matches")
                         .HasForeignKey("RoundId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SampleCQRSApplication.DTO.Team", "TeamA")
-                        .WithMany("HomeMatches")
-                        .HasForeignKey("TeamAId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.Navigation("AwayTeam");
 
-                    b.HasOne("SampleCQRSApplication.DTO.Team", "TeamB")
-                        .WithMany("AwayMatches")
-                        .HasForeignKey("TeamBId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.Navigation("HomeTeam");
 
                     b.Navigation("Round");
+                });
 
-                    b.Navigation("TeamA");
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentRound", null)
+                        .WithMany("Rounds")
+                        .HasForeignKey("RoundId");
+                });
 
-                    b.Navigation("TeamB");
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Season", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentSeason", null)
+                        .WithMany("Seasons")
+                        .HasForeignKey("SeasonId");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentTeam", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("TeamId");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.Tournament", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentRound", null)
+                        .WithMany("Tournaments")
+                        .HasForeignKey("TournamentId");
+
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentSeason", null)
+                        .WithMany("Tournaments")
+                        .HasForeignKey("TournamentId");
+
+                    b.HasOne("SampleCQRSApplication.DTO.TournamentTeam", null)
+                        .WithMany("Tournaments")
+                        .HasForeignKey("TournamentId");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
@@ -149,6 +342,27 @@ namespace SampleCQRSApplication.Migrations
                     b.Navigation("AwayMatches");
 
                     b.Navigation("HomeMatches");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
+                {
+                    b.Navigation("Rounds");
+
+                    b.Navigation("Tournaments");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentSeason", b =>
+                {
+                    b.Navigation("Seasons");
+
+                    b.Navigation("Tournaments");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentTeam", b =>
+                {
+                    b.Navigation("Teams");
+
+                    b.Navigation("Tournaments");
                 });
 #pragma warning restore 612, 618
         }

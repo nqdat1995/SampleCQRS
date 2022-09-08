@@ -1,25 +1,31 @@
 ﻿using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
+using System.Linq.Expressions;
 
 namespace SampleCQRSApplication.Query
 {
     public class GetTeamsQuery : IRequest<List<Team>>
     {
+        public string Name { get; set; }
     }
     public class GetTeamsQueryHandler : IRequestHandler<GetTeamsQuery, List<Team>>
     {
-        private readonly TeamsInMemory teamsInMemory;
+        private readonly IUnitOfWork unitOfWork;
 
-        public GetTeamsQueryHandler()
+        public GetTeamsQueryHandler(IUnitOfWork unitOfWork)
         {
-            teamsInMemory = new TeamsInMemory();
+            this.unitOfWork = unitOfWork;
         }
 
-        public Task<List<Team>> Handle(GetTeamsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Team>> Handle(GetTeamsQuery request, CancellationToken cancellationToken)
         {
-            var teams = teamsInMemory.Teams;
-            return Task.FromResult(teams);
+            IEnumerable<Team> teams = default(IEnumerable<Team>);
+            if (!string.IsNullOrEmpty(request.Name))
+                teams = unitOfWork.TeamsRepository.Get(filter: (x) => x.Name == request.Name);
+            else
+                teams = unitOfWork.TeamsRepository.Get();
+            return await Task.FromResult(teams.ToList());
         }
     }
 }

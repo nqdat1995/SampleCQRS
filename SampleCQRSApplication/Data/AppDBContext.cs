@@ -16,7 +16,13 @@ namespace SampleCQRSApplication.Data
 
         public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
-        public DbSet<Round> Round { get; set; }
+        public DbSet<Round> Rounds { get; set; }
+        public DbSet<Tournament> Tournaments { get; set; }
+        public DbSet<Season> Seasons { get; set; }
+        public DbSet<Bet> Bets { get; set; }
+        public DbSet<TournamentRound> TournamentRounds { get; set; }
+        public DbSet<TournamentSeason> TournamentSeasons { get; set; }
+        public DbSet<TournamentTeam> TournamentTeams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
