@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleCQRSApplication.Data;
 
@@ -11,9 +12,10 @@ using SampleCQRSApplication.Data;
 namespace SampleCQRSApplication.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220909022551_Init6")]
+    partial class Init6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
@@ -66,7 +68,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Bets", (string)null);
+                    b.ToTable("Bets");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Match", b =>
@@ -109,7 +111,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("Matches", (string)null);
+                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
@@ -131,7 +133,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("Rounds", (string)null);
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Season", b =>
@@ -153,7 +155,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("Seasons", (string)null);
+                    b.ToTable("Seasons");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
@@ -188,7 +190,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Teams", (string)null);
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Tournament", b =>
@@ -214,7 +216,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Tournaments", (string)null);
+                    b.ToTable("Tournaments");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
@@ -233,7 +235,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentRounds", (string)null);
+                    b.ToTable("TournamentRounds");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentSeason", b =>
@@ -252,7 +254,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentSeasons", (string)null);
+                    b.ToTable("TournamentSeasons");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentTeam", b =>
@@ -271,7 +273,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentTeams", (string)null);
+                    b.ToTable("TournamentTeams");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>

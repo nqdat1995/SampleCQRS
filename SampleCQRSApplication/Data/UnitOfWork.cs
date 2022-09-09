@@ -15,6 +15,7 @@ namespace SampleCQRSApplication.Data
         private ITournamentRoundRepository tournamentRoundRepository;
         private ITournamentSeasonRepository tournamentSeasonRepository;
         private ITournamentTeamRepository tournamentTeamRepository;
+        private IUserRepository userRepository;
 
         public UnitOfWork(AppDBContext context)
         {
@@ -127,6 +128,19 @@ namespace SampleCQRSApplication.Data
                     this.tournamentTeamRepository = new TournamentTeamRepository(context);
                 }
                 return tournamentTeamRepository;
+            }
+        }
+
+        //Authentication
+        public IUserRepository UserRepository {
+            get
+            {
+
+                if (this.userRepository == null)
+                {
+                    this.userRepository = new UserRepository(context);
+                }
+                return userRepository;
             }
         }
 

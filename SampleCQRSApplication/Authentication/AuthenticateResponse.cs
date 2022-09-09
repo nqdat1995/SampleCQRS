@@ -11,13 +11,15 @@ namespace SampleCQRSApplication.Authentication
         public int Id { get; set; }
         public string Username { get; set; }
         public string Token { get; set; }
+        public Role Role { get; set; }
 
 
-        public AuthenticateResponse(User user, string token, string role)
+        public AuthenticateResponse(User user, string token)
         {
             Id = user.Id;
             Username = user.Username;
             Token = token;
+            Role = user.Role;
         }
     }
 }

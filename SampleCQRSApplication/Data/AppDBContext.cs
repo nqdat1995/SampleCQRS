@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.DTO;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace SampleCQRSApplication.Data
         public DbSet<TournamentRound> TournamentRounds { get; set; }
         public DbSet<TournamentSeason> TournamentSeasons { get; set; }
         public DbSet<TournamentTeam> TournamentTeams { get; set; }
+
+        //Authentication
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,6 +8,6 @@ namespace SampleCQRSApplication.Authentication
         public string Username { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
-        public string Role { get; set; }
+        public Role Role { get; set; }
     }
 }
