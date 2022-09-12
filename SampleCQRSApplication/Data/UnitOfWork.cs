@@ -16,6 +16,7 @@ namespace SampleCQRSApplication.Data
         private ITournamentSeasonRepository tournamentSeasonRepository;
         private ITournamentTeamRepository tournamentTeamRepository;
         private IUserRepository userRepository;
+        private ISendMailRepository sendMailRepository;
 
         public UnitOfWork(AppDBContext context)
         {
@@ -128,6 +129,18 @@ namespace SampleCQRSApplication.Data
                     this.tournamentTeamRepository = new TournamentTeamRepository(context);
                 }
                 return tournamentTeamRepository;
+            }
+        }
+        public ISendMailRepository SendMailRepository
+        {
+            get
+            {
+
+                if (this.sendMailRepository == null)
+                {
+                    this.sendMailRepository = new SendMailRepository(context);
+                }
+                return sendMailRepository;
             }
         }
 

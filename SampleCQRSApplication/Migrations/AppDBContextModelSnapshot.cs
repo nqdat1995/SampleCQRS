@@ -30,11 +30,18 @@ namespace SampleCQRSApplication.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -43,7 +50,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
@@ -66,7 +73,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Bets", (string)null);
+                    b.ToTable("Bets");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Match", b =>
@@ -109,7 +116,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("Matches", (string)null);
+                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
@@ -131,7 +138,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("RoundId");
 
-                    b.ToTable("Rounds", (string)null);
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Season", b =>
@@ -153,7 +160,45 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("Seasons", (string)null);
+                    b.ToTable("Seasons");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.SendMail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Sent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ValidateCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SendMails");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
@@ -188,7 +233,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Teams", (string)null);
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Tournament", b =>
@@ -214,7 +259,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Tournaments", (string)null);
+                    b.ToTable("Tournaments");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
@@ -233,7 +278,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentRounds", (string)null);
+                    b.ToTable("TournamentRounds");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentSeason", b =>
@@ -252,7 +297,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentSeasons", (string)null);
+                    b.ToTable("TournamentSeasons");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentTeam", b =>
@@ -271,7 +316,7 @@ namespace SampleCQRSApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TournamentTeams", (string)null);
+                    b.ToTable("TournamentTeams");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
@@ -334,6 +379,17 @@ namespace SampleCQRSApplication.Migrations
                         .HasForeignKey("SeasonId");
                 });
 
+            modelBuilder.Entity("SampleCQRSApplication.DTO.SendMail", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.Authentication.User", "User")
+                        .WithMany("SendMails")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
                 {
                     b.HasOne("SampleCQRSApplication.DTO.TournamentTeam", null)
@@ -354,6 +410,11 @@ namespace SampleCQRSApplication.Migrations
                     b.HasOne("SampleCQRSApplication.DTO.TournamentTeam", null)
                         .WithMany("Tournaments")
                         .HasForeignKey("TournamentId");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.Authentication.User", b =>
+                {
+                    b.Navigation("SendMails");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>

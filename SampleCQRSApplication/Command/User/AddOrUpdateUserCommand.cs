@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
+using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.DTO;
 using SampleCQRSApplication.Request;
 
 namespace SampleCQRSApplication.Command
@@ -9,7 +9,7 @@ namespace SampleCQRSApplication.Command
     public class AddOrUpdateUserCommand : IRequest<bool>
     {
         public int Id { get; set; }
-        public TeamRequest Team { get; set; }
+        public RegisterUserRequest RegisterUser { get; set; }
     }
     public class AddOrUpdateUserCommandHandler : IRequestHandler<AddOrUpdateUserCommand, bool>
     {
@@ -24,17 +24,17 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var team = unitOfWork.TeamsRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var user = unitOfWork.UserRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
-            if (team != null)
+            if (user != null)
             {
-                mapper.Map(request.Team, team);
-                unitOfWork.TeamsRepository.Update(team);
+                mapper.Map(request.RegisterUser, user);
+                unitOfWork.UserRepository.Update(user);
                 await unitOfWork.Save();
                 return true;
             }
 
-            unitOfWork.TeamsRepository.Insert(mapper.Map(request.Team, new Team()));
+            unitOfWork.UserRepository.Insert(mapper.Map(request.RegisterUser, new User()));
             await unitOfWork.Save();
             return await Task.FromResult(true);
         }

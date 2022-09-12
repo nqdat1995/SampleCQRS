@@ -14,6 +14,7 @@ namespace SampleCQRSApplication.Data
         ITournamentSeasonRepository TournamentSeasonRepository { get; }
         ITournamentTeamRepository TournamentTeamRepository { get; }
         IUserRepository UserRepository { get; }
+        ISendMailRepository SendMailRepository { get; }
         public Task Save();
     }
 }

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FluentValidation;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using SampleCQRSApplication;
 using SampleCQRSApplication.Authentication;
@@ -26,10 +27,15 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 // configure DI for application services
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMailUtils, MailUtils>();
+builder.Services.AddSingleton<ISHAUtils, SHAUtils>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+builder.Services.AddValidatorsFromAssemblyContaining<ApplicationModule>();
+
 //builder.Services.AddMediatR(typeof(AddOrUpdateTeamCommandHandler).Assembly);
 // Call UseServiceProviderFactory on the Host sub property 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -66,16 +72,16 @@ app.UseAuthorization();
 app.MapControllers();
 
 {
-    var testUsers = new List<User>
-    {
-        new User { Username = "admin", Password = "admin", Role = Role.Admin },
-        new User { Username = "test", Password = "test", Role = Role.User }
-    };
+    //var testUsers = new List<User>
+    //{
+    //    new User { Username = "admin", Password = "admin", Role = Role.Admin, Status = UserStatus.Activated, Email = "admin@example.com" },
+    //    new User { Username = "test", Password = "test", Role = Role.User, Status = UserStatus.Activated, Email = "test@example.com" }
+    //};
 
-    using var scope = app.Services.CreateScope();
-    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-    await unitOfWork.UserRepository.InsertRange(testUsers);
-    await unitOfWork.Save();
+    //using var scope = app.Services.CreateScope();
+    //var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+    //await unitOfWork.UserRepository.InsertRange(testUsers);
+    //await unitOfWork.Save();
 }
 
 app.Run();

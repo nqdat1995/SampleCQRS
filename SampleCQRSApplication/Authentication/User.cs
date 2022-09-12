@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using SampleCQRSApplication.DTO;
+using System.Text.Json.Serialization;
 
 namespace SampleCQRSApplication.Authentication
 {
@@ -6,8 +7,10 @@ namespace SampleCQRSApplication.Authentication
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        [JsonIgnore]
         public string Password { get; set; }
-        public Role Role { get; set; }
+        public string Email { get; set; }
+        public Role Role { get; set; } = Role.User;
+        public UserStatus Status { get; set; } = UserStatus.Validating;
+        public virtual ICollection<SendMail> SendMails { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace SampleCQRSApplication.Data
 
         //Authentication
         public DbSet<User> Users { get; set; }
+        public DbSet<SendMail> SendMails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
