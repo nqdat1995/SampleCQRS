@@ -17,9 +17,14 @@ namespace SampleCQRSApplication
                 .ForMember(desc => desc.IsActive, act => act.MapFrom(src => src.IsActive));
             CreateMap<Bet, Bet>();
             CreateMap<Match, Match>();
+            CreateMap<MatchRequest, Match>();
             CreateMap<Round, Round>();
             CreateMap<Season, Season>();
+            CreateMap<SeasonRequest, Season>();
             CreateMap<Tournament, Tournament>();
+            CreateMap<TournamentRound, TournamentRound>();
+            CreateMap<TournamentSeason, TournamentSeason>();
+            CreateMap<TournamentTeam, TournamentTeam>();
             CreateMap<User, User>();
             CreateMap<RegisterUserRequest, User>()
                 .ForMember(desc => desc.Username, act => act.MapFrom(src => src.Email.Trim().Replace("@sacombank.com", string.Empty)))

@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SampleCQRSApplication.Data;
@@ -12,25 +11,50 @@ using SampleCQRSApplication.Data;
 namespace SampleCQRSApplication.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20220908020521_Init5")]
-    partial class Init5
+    [Migration("20220912135117_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            modelBuilder.Entity("SampleCQRSApplication.Authentication.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Bet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("MatchId")
                         .HasColumnType("int");
@@ -53,22 +77,17 @@ namespace SampleCQRSApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AwayTeamId")
-                        .HasColumnType("int");
-
                     b.Property<int>("HomeTeamId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MatchDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<float>("RateAwayTeam")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.Property<float>("RateHomeTeam")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.Property<int>("RoundId")
                         .HasColumnType("int");
@@ -79,13 +98,16 @@ namespace SampleCQRSApplication.Migrations
                     b.Property<int>("ScoreHomeTeam")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("VisitingTeamId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AwayTeamId");
+                    b.HasKey("Id");
 
                     b.HasIndex("HomeTeamId");
 
                     b.HasIndex("RoundId");
+
+                    b.HasIndex("VisitingTeamId");
 
                     b.ToTable("Matches");
                 });
@@ -96,11 +118,9 @@ namespace SampleCQRSApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("RoundId")
                         .HasColumnType("int");
@@ -118,11 +138,9 @@ namespace SampleCQRSApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("SeasonId")
                         .HasColumnType("int");
@@ -134,30 +152,66 @@ namespace SampleCQRSApplication.Migrations
                     b.ToTable("Seasons");
                 });
 
+            modelBuilder.Entity("SampleCQRSApplication.DTO.SendMail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Sent")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ValidateCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SendMails");
+                });
+
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LogoUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int?>("TeamId")
                         .HasColumnType("int");
@@ -175,15 +229,13 @@ namespace SampleCQRSApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("LogoUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("TournamentId")
                         .HasColumnType("int");
@@ -200,8 +252,6 @@ namespace SampleCQRSApplication.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("RoundId")
                         .HasColumnType("int");
@@ -220,8 +270,6 @@ namespace SampleCQRSApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("SeasonId")
                         .HasColumnType("int");
 
@@ -238,8 +286,6 @@ namespace SampleCQRSApplication.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
@@ -273,12 +319,6 @@ namespace SampleCQRSApplication.Migrations
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Match", b =>
                 {
-                    b.HasOne("SampleCQRSApplication.DTO.Team", "AwayTeam")
-                        .WithMany("AwayMatches")
-                        .HasForeignKey("AwayTeamId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SampleCQRSApplication.DTO.Team", "HomeTeam")
                         .WithMany("HomeMatches")
                         .HasForeignKey("HomeTeamId")
@@ -291,11 +331,17 @@ namespace SampleCQRSApplication.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AwayTeam");
+                    b.HasOne("SampleCQRSApplication.DTO.Team", "VisitingTeam")
+                        .WithMany("VisitingMatches")
+                        .HasForeignKey("VisitingTeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("HomeTeam");
 
                     b.Navigation("Round");
+
+                    b.Navigation("VisitingTeam");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
@@ -310,6 +356,17 @@ namespace SampleCQRSApplication.Migrations
                     b.HasOne("SampleCQRSApplication.DTO.TournamentSeason", null)
                         .WithMany("Seasons")
                         .HasForeignKey("SeasonId");
+                });
+
+            modelBuilder.Entity("SampleCQRSApplication.DTO.SendMail", b =>
+                {
+                    b.HasOne("SampleCQRSApplication.Authentication.User", "User")
+                        .WithMany("SendMails")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
@@ -334,6 +391,11 @@ namespace SampleCQRSApplication.Migrations
                         .HasForeignKey("TournamentId");
                 });
 
+            modelBuilder.Entity("SampleCQRSApplication.Authentication.User", b =>
+                {
+                    b.Navigation("SendMails");
+                });
+
             modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
                 {
                     b.Navigation("Matches");
@@ -341,9 +403,9 @@ namespace SampleCQRSApplication.Migrations
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.Team", b =>
                 {
-                    b.Navigation("AwayMatches");
-
                     b.Navigation("HomeMatches");
+
+                    b.Navigation("VisitingMatches");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>

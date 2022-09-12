@@ -10,27 +10,27 @@ using System.Threading.Tasks;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteMatchCommand : IRequest<bool>
+    public class DeleteTournamentCommand : IRequest<bool>
     {
-        public int Id { get; set; }
+        public Tournament Tournament { get; set; }
     }
-    public class DeleteMatchCommandHandler : IRequestHandler<DeleteMatchCommand, bool>
+    public class DeleteTournamentCommandHandler : IRequestHandler<DeleteTournamentCommand, bool>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public DeleteMatchCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DeleteTournamentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteMatchCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteTournamentCommand request, CancellationToken cancellationToken)
         {
-            var match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var tournament = unitOfWork.TournamentRepository.Get(filter: x => x.Id == request.Tournament.Id).FirstOrDefault();
 
-            if (match != null)
+            if (tournament != null)
             {
-                unitOfWork.MatchRepository.Delete(match);
+                unitOfWork.TournamentRepository.Delete(tournament);
                 await unitOfWork.Save();
                 return await Task.FromResult(true);
             }

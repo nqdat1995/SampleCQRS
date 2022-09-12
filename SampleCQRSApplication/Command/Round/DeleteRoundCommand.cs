@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteMatchCommand : IRequest<bool>
+    public class DeleteRoundCommand : IRequest<bool>
     {
-        public int Id { get; set; }
+        public Match Match { get; set; }
     }
-    public class DeleteMatchCommandHandler : IRequestHandler<DeleteMatchCommand, bool>
+    public class DeleteRoundCommandHandler : IRequestHandler<DeleteRoundCommand, bool>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public DeleteMatchCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DeleteRoundCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteMatchCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteRoundCommand request, CancellationToken cancellationToken)
         {
-            var match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Match.Id).FirstOrDefault();
 
             if (match != null)
             {

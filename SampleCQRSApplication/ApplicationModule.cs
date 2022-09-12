@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SampleCQRSApplication.Data;
 
 namespace SampleCQRSApplication
@@ -29,7 +27,8 @@ namespace SampleCQRSApplication
                 .Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-                    dbContextOptionsBuilder.UseSqlServer(connectionString);
+                    //dbContextOptionsBuilder.UseSqlServer(connectionString);
+                    dbContextOptionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
                     return new AppDBContext(dbContextOptionsBuilder.Options);
                 })

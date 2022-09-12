@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Command;
+using SampleCQRSApplication.Query;
 using SampleCQRSApplication.Request;
 
 namespace SampleCQRS.Controllers
@@ -72,9 +73,9 @@ namespace SampleCQRS.Controllers
 
         [Authorize(Role.Admin)]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _userService.GetAll();
+            var users = await mediator.Send(new GetUsersQuery());
             return Ok(users);
         }
     }

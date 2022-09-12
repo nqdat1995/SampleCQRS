@@ -44,7 +44,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     //containerBuilder.RegisterMediatR(typeof(Program).Assembly);
     containerBuilder.RegisterMediatR(typeof(ApplicationModule).Assembly);
-    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
+    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
+    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
 });
 
 var app = builder.Build();
@@ -71,17 +72,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-{
-    //var testUsers = new List<User>
-    //{
-    //    new User { Username = "admin", Password = "admin", Role = Role.Admin, Status = UserStatus.Activated, Email = "admin@example.com" },
-    //    new User { Username = "test", Password = "test", Role = Role.User, Status = UserStatus.Activated, Email = "test@example.com" }
-    //};
+//{
+//    var testUsers = new List<User>
+//    {
+//        new User { Username = "admin", Password = "admin", Role = Role.Admin, Status = UserStatus.Activated, Email = "admin@example.com" },
+//        new User { Username = "test", Password = "test", Role = Role.User, Status = UserStatus.Activated, Email = "test@example.com" }
+//    };
 
-    //using var scope = app.Services.CreateScope();
-    //var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-    //await unitOfWork.UserRepository.InsertRange(testUsers);
-    //await unitOfWork.Save();
-}
+//    using var scope = app.Services.CreateScope();
+//    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+//    await unitOfWork.UserRepository.InsertRange(testUsers);
+//    await unitOfWork.Save();
+//}
 
 app.Run();

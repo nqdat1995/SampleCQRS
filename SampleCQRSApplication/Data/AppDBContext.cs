@@ -33,7 +33,7 @@ namespace SampleCQRSApplication.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Team>().HasMany<Match>(x => x.HomeMatches).WithOne(x => x.HomeTeam).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<Team>().HasMany<Match>(x => x.AwayMatches).WithOne(x => x.AwayTeam).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Team>().HasMany<Match>(x => x.VisitingMatches).WithOne(x => x.VisitingTeam).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
