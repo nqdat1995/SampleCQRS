@@ -6,6 +6,7 @@ namespace SampleCQRSApplication.Query
 {
     public class GetSeasonQuery : IRequest<IEnumerable<Season>>
     {
+        public int Id { get; set; }
     }
     public class GetSeasonQueryHandler : IRequestHandler<GetSeasonQuery, IEnumerable<Season>>
     {
@@ -18,7 +19,10 @@ namespace SampleCQRSApplication.Query
 
         public Task<IEnumerable<Season>> Handle(GetSeasonQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(unitOfWork.SeasonRepository.Get());
+            if (request.Id == 0)
+                return Task.FromResult(unitOfWork.SeasonRepository.Get());
+
+            return Task.FromResult(unitOfWork.SeasonRepository.Get(x => x.Id == request.Id));
         }
     }
 }

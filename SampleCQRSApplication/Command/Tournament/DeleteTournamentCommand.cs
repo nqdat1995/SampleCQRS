@@ -12,7 +12,7 @@ namespace SampleCQRSApplication.Command
 {
     public class DeleteTournamentCommand : IRequest<bool>
     {
-        public Tournament Tournament { get; set; }
+        public int Id { get; set; }
     }
     public class DeleteTournamentCommandHandler : IRequestHandler<DeleteTournamentCommand, bool>
     {
@@ -26,16 +26,16 @@ namespace SampleCQRSApplication.Command
         }
         public async Task<bool> Handle(DeleteTournamentCommand request, CancellationToken cancellationToken)
         {
-            var tournament = unitOfWork.TournamentRepository.Get(filter: x => x.Id == request.Tournament.Id).FirstOrDefault();
+            var tournament = unitOfWork.TournamentRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
             if (tournament != null)
             {
                 unitOfWork.TournamentRepository.Delete(tournament);
                 await unitOfWork.Save();
-                return await Task.FromResult(true);
+                return true;
             }
 
-            return await Task.FromResult(false);
+            return false;
         }
     }
 }

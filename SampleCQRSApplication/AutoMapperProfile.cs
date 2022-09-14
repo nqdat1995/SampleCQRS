@@ -22,8 +22,10 @@ namespace SampleCQRSApplication
             CreateMap<Season, Season>();
             CreateMap<SeasonRequest, Season>();
             CreateMap<Tournament, Tournament>();
+            CreateMap<TournamentRequest, Tournament>();
             CreateMap<TournamentRound, TournamentRound>();
             CreateMap<TournamentSeason, TournamentSeason>();
+            CreateMap<TournamentSeasonRequest, TournamentSeason>();
             CreateMap<TournamentTeam, TournamentTeam>();
             CreateMap<User, User>();
             CreateMap<RegisterUserRequest, User>()

@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentValidation;
 using MediatR.Extensions.Autofac.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using SampleCQRSApplication;
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Data;
@@ -31,7 +32,33 @@ builder.Services.AddScoped<IMailUtils, MailUtils>();
 builder.Services.AddSingleton<ISHAUtils, SHAUtils>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationModule>();
@@ -44,8 +71,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     //containerBuilder.RegisterMediatR(typeof(Program).Assembly);
     containerBuilder.RegisterMediatR(typeof(ApplicationModule).Assembly);
-    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
-    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
+    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
+    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
 });
 
 var app = builder.Build();

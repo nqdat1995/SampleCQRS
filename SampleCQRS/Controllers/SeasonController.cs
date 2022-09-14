@@ -21,8 +21,18 @@ namespace SampleCQRS.Controllers
             _mediator = mediator;
             this.unitOfWork = unitOfWork;
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSeason([FromRoute] int id)
+        {
+            return Ok((await _mediator.Send(new GetSeasonQuery { Id = id })).FirstOrDefault());
+        }
+        [HttpGet("{id}/tournaments")]
+        public async Task<IActionResult> GetTournamentBySeason([FromRoute] int id)
+        {
+            return Ok(await _mediator.Send(new GetTournamentBySeasonQuery { SeasonId = id }));
+        }
         [HttpGet]
-        public async Task<IActionResult> GetMatchs()
+        public async Task<IActionResult> GetSeasons()
         {
             return Ok(await _mediator.Send(new GetSeasonQuery { }));
         }
@@ -36,7 +46,7 @@ namespace SampleCQRS.Controllers
         }
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateMatch([FromRoute] int id, [FromBody] SeasonRequest seasonRequest)
+        public async Task<IActionResult> UpdateSeason([FromRoute] int id, [FromBody] SeasonRequest seasonRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateSeasonCommand { Id = id, Season = seasonRequest });
 
@@ -44,7 +54,7 @@ namespace SampleCQRS.Controllers
         }
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteMatch([FromRoute] int id)
+        public async Task<IActionResult> DeleteSeason([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteSeasonCommand { Id = id });
 

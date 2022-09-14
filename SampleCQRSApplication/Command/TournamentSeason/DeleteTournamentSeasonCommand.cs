@@ -12,30 +12,28 @@ namespace SampleCQRSApplication.Command
 {
     public class DeleteTournamentSeasonCommand : IRequest<bool>
     {
-        public TournamentSeason TournamentSeason { get; set; }
+        public int Id { get; set; }
     }
     public class DeleteTournamentSeasonCommandHandler : IRequestHandler<DeleteTournamentSeasonCommand, bool>
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;
 
-        public DeleteTournamentSeasonCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public DeleteTournamentSeasonCommandHandler(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-            this.mapper = mapper;
         }
         public async Task<bool> Handle(DeleteTournamentSeasonCommand request, CancellationToken cancellationToken)
         {
-            var season = unitOfWork.TournamentSeasonRepository.Get(filter: x => x.Id == request.TournamentSeason.Id).FirstOrDefault();
+            var tournamentSeason = unitOfWork.TournamentSeasonRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
-            if (season != null)
+            if (tournamentSeason != null)
             {
-                unitOfWork.TournamentSeasonRepository.Delete(season);
+                unitOfWork.TournamentSeasonRepository.Delete(tournamentSeason);
                 await unitOfWork.Save();
-                return await Task.FromResult(true);
+                return true;
             }
 
-            return await Task.FromResult(false);
+            return false;
         }
     }
 }

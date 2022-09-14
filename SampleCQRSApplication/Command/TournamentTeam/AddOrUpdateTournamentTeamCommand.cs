@@ -2,12 +2,14 @@
 using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
+using SampleCQRSApplication.Request;
 
 namespace SampleCQRSApplication.Command
 {
     public class AddOrUpdateTournamentTeamCommand : IRequest<bool>
     {
-        public TournamentTeam TournamentTeam { get; set; }
+        public int Id { get; set; }
+        public TournamentTeamRequest TournamentTeam { get; set; }
     }
     public class AddOrUpdateTournamentTeamCommandHandler : IRequestHandler<AddOrUpdateTournamentTeamCommand, bool>
     {
@@ -22,19 +24,23 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateTournamentTeamCommand request, CancellationToken cancellationToken)
         {
-            var tournamentTeam = unitOfWork.TournamentTeamRepository.Get(filter: x => x.Id == request.TournamentTeam.Id).FirstOrDefault();
-
-            if (tournamentTeam != null)
+            if(request.Id == 0)
             {
-                mapper.Map(request.TournamentTeam, tournamentTeam);
-                unitOfWork.TournamentTeamRepository.Update(tournamentTeam);
+                unitOfWork.TournamentTeamRepository.Insert(mapper.Map(request.TournamentTeam, new TournamentTeam()));
                 await unitOfWork.Save();
-                return false;
+                return true;
             }
 
-            unitOfWork.TournamentTeamRepository.Insert(request.TournamentTeam);
+            var tournament = unitOfWork.TournamentTeamRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+
+            if (tournament == null)
+            {
+                return false;
+            }
+            
+            unitOfWork.TournamentTeamRepository.Update(mapper.Map(request.TournamentTeam, tournament));
             await unitOfWork.Save();
-            return await Task.FromResult(true);
+            return true;
         }
     }
 }

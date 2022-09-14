@@ -2,12 +2,14 @@
 using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
+using SampleCQRSApplication.Request;
 
 namespace SampleCQRSApplication.Command
 {
     public class AddOrUpdateTournamentCommand : IRequest<bool>
     {
-        public Tournament Tournament { get; set; }
+        public int Id { get; set; }
+        public TournamentRequest Tournament { get; set; }
     }
     public class AddOrUpdateTournamentCommandHandler : IRequestHandler<AddOrUpdateTournamentCommand, bool>
     {
@@ -22,19 +24,23 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateTournamentCommand request, CancellationToken cancellationToken)
         {
-            var tournament = unitOfWork.TournamentRepository.Get(filter: x => x.Id == request.Tournament.Id).FirstOrDefault();
-
-            if (tournament != null)
+            if(request.Id == 0)
             {
-                mapper.Map(request.Tournament, tournament);
-                unitOfWork.TournamentRepository.Update(tournament);
+                unitOfWork.TournamentRepository.Insert(mapper.Map(request.Tournament, new Tournament()));
                 await unitOfWork.Save();
-                return false;
+                return true;
             }
 
-            unitOfWork.TournamentRepository.Insert(request.Tournament);
+            var tournament = unitOfWork.TournamentRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+
+            if (tournament == null)
+            {
+                return false;
+            }
+            
+            unitOfWork.TournamentRepository.Update(mapper.Map(request.Tournament, tournament));
             await unitOfWork.Save();
-            return await Task.FromResult(true);
+            return true;
         }
     }
 }
