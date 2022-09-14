@@ -1,13 +1,14 @@
 ﻿using MediatR;
 using SampleCQRSApplication.Data;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteTournamentTeamCommand : IRequest<bool>
+    public class DeleteTournamentTeamCommand : IRequest<IResultResponse>
     {
         public int Id { get; set; }
     }
-    public class DeleteTournamentTeamCommandHandler : IRequestHandler<DeleteTournamentTeamCommand, bool>
+    public class DeleteTournamentTeamCommandHandler : IRequestHandler<DeleteTournamentTeamCommand, IResultResponse>
     {
         private readonly IUnitOfWork unitOfWork;
 
@@ -15,7 +16,7 @@ namespace SampleCQRSApplication.Command
         {
             this.unitOfWork = unitOfWork;
         }
-        public async Task<bool> Handle(DeleteTournamentTeamCommand request, CancellationToken cancellationToken)
+        public async Task<IResultResponse> Handle(DeleteTournamentTeamCommand request, CancellationToken cancellationToken)
         {
             var tournamentTeam = unitOfWork.TournamentTeamRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
@@ -23,10 +24,10 @@ namespace SampleCQRSApplication.Command
             {
                 unitOfWork.TournamentTeamRepository.Delete(tournamentTeam);
                 await unitOfWork.Save();
-                return true;
+                return ResultResponse.BuildResponse(tournamentTeam.Id);
             }
 
-            return false;
+            return ResultResponse.BuildResponse(0);
         }
     }
 }

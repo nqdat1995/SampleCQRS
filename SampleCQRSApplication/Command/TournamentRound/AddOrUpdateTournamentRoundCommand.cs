@@ -2,16 +2,16 @@
 using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {
-    public class AddOrUpdateTournamentRoundCommand : IRequest<bool>
+    public class AddOrUpdateTournamentRoundCommand : IRequest<IResultResponse>
     {
         public int Id { get; set; }
         public TournamentRoundRequest TournamentRound { get; set; }
     }
-    public class AddOrUpdateTournamentRoundCommandHandler : IRequestHandler<AddOrUpdateTournamentRoundCommand, bool>
+    public class AddOrUpdateTournamentRoundCommandHandler : IRequestHandler<AddOrUpdateTournamentRoundCommand, IResultResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
@@ -22,25 +22,26 @@ namespace SampleCQRSApplication.Command
             this.mapper = mapper;
         }
 
-        public async Task<bool> Handle(AddOrUpdateTournamentRoundCommand request, CancellationToken cancellationToken)
+        public async Task<IResultResponse> Handle(AddOrUpdateTournamentRoundCommand request, CancellationToken cancellationToken)
         {
             if(request.Id == 0)
             {
-                unitOfWork.TournamentRoundRepository.Insert(mapper.Map(request.TournamentRound, new TournamentRound()));
+                var temp = mapper.Map(request.TournamentRound, new TournamentRound());
+                unitOfWork.TournamentRoundRepository.Insert(temp);
                 await unitOfWork.Save();
-                return true;
+                return ResultResponse.BuildResponse(temp.Id);
             }
 
             var tournament = unitOfWork.TournamentRoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
             if (tournament == null)
             {
-                return false;
+                return ResultResponse.BuildResponse(0);
             }
             
             unitOfWork.TournamentRoundRepository.Update(mapper.Map(request.TournamentRound, tournament));
             await unitOfWork.Save();
-            return true;
+            return ResultResponse.BuildResponse(tournament.Id);
         }
     }
 }

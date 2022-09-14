@@ -23,6 +23,11 @@ namespace SampleCQRSApplication.Data
             this.context = context;
         }
 
+        public AppDBContext Context()
+        {
+            return this.context;
+        }
+
         public ITeamRepository TeamRepository
         {
             get
@@ -145,7 +150,8 @@ namespace SampleCQRSApplication.Data
         }
 
         //Authentication
-        public IUserRepository UserRepository {
+        public IUserRepository UserRepository
+        {
             get
             {
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleCQRSApplication.Request
+namespace SampleCQRSApplication.Message
 {
     public class RoundRequest
     {

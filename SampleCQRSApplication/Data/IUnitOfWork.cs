@@ -1,9 +1,11 @@
-﻿using SampleCQRSApplication.Data.Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using SampleCQRSApplication.Data.Repository;
 
 namespace SampleCQRSApplication.Data
 {
     public interface IUnitOfWork
     {
+        public AppDBContext Context();
         IBetRepository BetRepository { get; }
         IMatchRepository MatchRepository { get; }
         IRoundRepository RoundRepository { get; }

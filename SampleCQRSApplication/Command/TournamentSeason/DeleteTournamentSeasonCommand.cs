@@ -7,14 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteTournamentSeasonCommand : IRequest<bool>
+    public class DeleteTournamentSeasonCommand : IRequest<IResultResponse>
     {
         public int Id { get; set; }
     }
-    public class DeleteTournamentSeasonCommandHandler : IRequestHandler<DeleteTournamentSeasonCommand, bool>
+    public class DeleteTournamentSeasonCommandHandler : IRequestHandler<DeleteTournamentSeasonCommand, IResultResponse>
     {
         private readonly IUnitOfWork unitOfWork;
 
@@ -22,7 +23,7 @@ namespace SampleCQRSApplication.Command
         {
             this.unitOfWork = unitOfWork;
         }
-        public async Task<bool> Handle(DeleteTournamentSeasonCommand request, CancellationToken cancellationToken)
+        public async Task<IResultResponse> Handle(DeleteTournamentSeasonCommand request, CancellationToken cancellationToken)
         {
             var tournamentSeason = unitOfWork.TournamentSeasonRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
@@ -30,10 +31,10 @@ namespace SampleCQRSApplication.Command
             {
                 unitOfWork.TournamentSeasonRepository.Delete(tournamentSeason);
                 await unitOfWork.Save();
-                return true;
+                return ResultResponse.BuildResponse(request.Id);
             }
 
-            return false;
+            return ResultResponse.BuildResponse(0);
         }
     }
 }

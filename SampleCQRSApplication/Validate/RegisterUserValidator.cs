@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;

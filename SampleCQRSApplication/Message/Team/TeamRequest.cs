@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SampleCQRSApplication.Request
+namespace SampleCQRSApplication.Message
 {
     public class TeamRequest
     {

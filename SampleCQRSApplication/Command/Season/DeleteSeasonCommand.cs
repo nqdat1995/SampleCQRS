@@ -1,20 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteSeasonCommand : IRequest<bool>
+    public class DeleteSeasonCommand : IRequest<IResultResponse>
     {
         public int Id { get; set; }
     }
-    public class DeleteSeasonCommandHandler : IRequestHandler<DeleteSeasonCommand, bool>
+    public class DeleteSeasonCommandHandler : IRequestHandler<DeleteSeasonCommand, IResultResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
@@ -24,7 +19,7 @@ namespace SampleCQRSApplication.Command
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteSeasonCommand request, CancellationToken cancellationToken)
+        public async Task<IResultResponse> Handle(DeleteSeasonCommand request, CancellationToken cancellationToken)
         {
             var season = unitOfWork.SeasonRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
@@ -32,10 +27,10 @@ namespace SampleCQRSApplication.Command
             {
                 unitOfWork.SeasonRepository.Delete(season);
                 await unitOfWork.Save();
-                return true;
+                return ResultResponse.BuildResponse(request.Id);
             }
 
-            return false;
+            return ResultResponse.BuildResponse(0);
         }
     }
 }

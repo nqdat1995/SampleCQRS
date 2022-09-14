@@ -2,7 +2,7 @@
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Command;
 using SampleCQRSApplication.DTO;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication
 {
@@ -19,14 +19,17 @@ namespace SampleCQRSApplication
             CreateMap<Match, Match>();
             CreateMap<MatchRequest, Match>();
             CreateMap<Round, Round>();
+            CreateMap<RoundRequest, Round>();
             CreateMap<Season, Season>();
             CreateMap<SeasonRequest, Season>();
             CreateMap<Tournament, Tournament>();
             CreateMap<TournamentRequest, Tournament>();
             CreateMap<TournamentRound, TournamentRound>();
+            CreateMap<TournamentRoundRequest, TournamentRound>();
             CreateMap<TournamentSeason, TournamentSeason>();
             CreateMap<TournamentSeasonRequest, TournamentSeason>();
             CreateMap<TournamentTeam, TournamentTeam>();
+            CreateMap<TournamentTeamRequest, TournamentTeam>();
             CreateMap<User, User>();
             CreateMap<RegisterUserRequest, User>()
                 .ForMember(desc => desc.Username, act => act.MapFrom(src => src.Email.Trim().Replace("@sacombank.com", string.Empty)))

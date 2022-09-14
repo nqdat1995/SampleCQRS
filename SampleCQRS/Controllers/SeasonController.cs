@@ -5,7 +5,7 @@ using SampleCQRSApplication.Command;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.Notify;
 using SampleCQRSApplication.Query;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRS.Controllers
 {

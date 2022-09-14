@@ -2,7 +2,7 @@
 using MediatR;
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {

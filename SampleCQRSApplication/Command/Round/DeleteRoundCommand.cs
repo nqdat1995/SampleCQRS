@@ -1,20 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {
-    public class DeleteRoundCommand : IRequest<bool>
+    public class DeleteRoundCommand : IRequest<IResultResponse>
     {
         public int Id { get; set; }
     }
-    public class DeleteRoundCommandHandler : IRequestHandler<DeleteRoundCommand, bool>
+    public class DeleteRoundCommandHandler : IRequestHandler<DeleteRoundCommand, IResultResponse>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
@@ -24,7 +19,7 @@ namespace SampleCQRSApplication.Command
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteRoundCommand request, CancellationToken cancellationToken)
+        public async Task<IResultResponse> Handle(DeleteRoundCommand request, CancellationToken cancellationToken)
         {
             var match = unitOfWork.RoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
@@ -32,10 +27,10 @@ namespace SampleCQRSApplication.Command
             {
                 unitOfWork.RoundRepository.Delete(match);
                 await unitOfWork.Save();
-                return await Task.FromResult(true);
+                return ResultResponse.BuildResponse(request.Id);
             }
 
-            return await Task.FromResult(false);
+            return ResultResponse.BuildResponse(0);
         }
     }
 }

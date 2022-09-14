@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRSApplication.Command
 {

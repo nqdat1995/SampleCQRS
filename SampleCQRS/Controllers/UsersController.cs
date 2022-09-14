@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Command;
 using SampleCQRSApplication.Query;
-using SampleCQRSApplication.Request;
+using SampleCQRSApplication.Message;
 
 namespace SampleCQRS.Controllers
 {

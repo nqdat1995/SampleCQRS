@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SampleCQRSApplication.Query
 {
-    public class GetTournamentBySeasonQuery : IRequest<ICollection<Tournament>>
+    public class GetTournamentBySeasonQuery : IRequest<IEnumerable<Tournament>>
     {
         public int SeasonId { get; set; }
     }
-    public class GetTournamentBySeasonQueryHandler : IRequestHandler<GetTournamentBySeasonQuery, ICollection<Tournament>>
+    public class GetTournamentBySeasonQueryHandler : IRequestHandler<GetTournamentBySeasonQuery, IEnumerable<Tournament>>
     {
         private readonly IUnitOfWork unitOfWork;
         public GetTournamentBySeasonQueryHandler(IUnitOfWork unitOfWork)
@@ -21,10 +21,16 @@ namespace SampleCQRSApplication.Query
             this.unitOfWork = unitOfWork;
         }
 
-        public Task<ICollection<Tournament>> Handle(GetTournamentBySeasonQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<Tournament>> Handle(GetTournamentBySeasonQuery request, CancellationToken cancellationToken)
         {
-            var tournaments = unitOfWork.TournamentSeasonRepository.Get(x => x.SeasonId == request.SeasonId, null, x => x.Tournaments).FirstOrDefault();
-            return Task.FromResult(tournaments?.Tournaments);
+            var context = unitOfWork.Context();
+
+            var result = (from s in context.Seasons
+                          join st in context.TournamentSeasons on s.Id equals st.SeasonId
+                          join t in context.Tournaments on st.TournamentId equals t.Id
+                          where s.Id == request.SeasonId
+                          select t);
+            return Task.FromResult(result.AsEnumerable());
         }
     }
 }

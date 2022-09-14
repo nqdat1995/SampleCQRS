@@ -1,4 +1,4 @@
-﻿namespace SampleCQRSApplication.Request
+﻿namespace SampleCQRSApplication.Message
 {
     public class TournamentSeasonRequest
     {

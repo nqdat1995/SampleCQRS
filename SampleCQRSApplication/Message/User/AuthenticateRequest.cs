@@ -1,7 +1,7 @@
 ﻿using SampleCQRSApplication.Authentication;
 using System.ComponentModel.DataAnnotations;
 
-namespace SampleCQRSApplication.Request
+namespace SampleCQRSApplication.Message
 {
     public class AuthenticateRequest
     {

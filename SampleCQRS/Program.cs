@@ -14,12 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
+builder.Services
+    .AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
     .AddJsonOptions(x =>
     {
         // serialize enums as strings in api responses (e.g. Role)
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+    })
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 // configure strongly typed settings object
@@ -72,8 +76,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     //containerBuilder.RegisterMediatR(typeof(Program).Assembly);
     containerBuilder.RegisterMediatR(typeof(ApplicationModule).Assembly);
-    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
-    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
+    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
+    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
 });
 
 var app = builder.Build();

@@ -27,8 +27,8 @@ namespace SampleCQRSApplication
                 .Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-                    dbContextOptionsBuilder.UseSqlServer(connectionString);
-                    //dbContextOptionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                    //dbContextOptionsBuilder.UseSqlServer(connectionString);
+                    dbContextOptionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
                     return new AppDBContext(dbContextOptionsBuilder.Options);
                 })

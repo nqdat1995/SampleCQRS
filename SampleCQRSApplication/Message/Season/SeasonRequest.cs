@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleCQRSApplication.Request
+namespace SampleCQRSApplication.Message
 {
-    public  class TournamentRequest
+    public class SeasonRequest
     {
         public string Name { get; set; }
-        public string LogoUrl { get; set; }
     }
 }

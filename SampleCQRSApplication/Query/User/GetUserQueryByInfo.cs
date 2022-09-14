@@ -25,7 +25,7 @@ namespace SampleCQRSApplication.Query
 
         public Task<User> Handle(GetUserQueryByInfo request, CancellationToken cancellationToken)
         {
-            var user = unitOfWork.UserRepository.Get(x => x.Username == request.Username && x.Password == request.Password).FirstOrDefault();
+            var user = unitOfWork.UserRepository.Get(x => (x.Username == request.Username || x.Email == request.Username) && x.Password == request.Password).FirstOrDefault();
 
             return Task.FromResult(user);
         }
