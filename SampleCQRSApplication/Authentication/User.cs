@@ -12,5 +12,6 @@ namespace SampleCQRSApplication.Authentication
         public Role Role { get; set; } = Role.User;
         public UserStatus Status { get; set; } = UserStatus.Validating;
         public virtual ICollection<SendMail> SendMails { get; set; }
+        public virtual ICollection<Bet> Bets { get; set; }
     }
 }

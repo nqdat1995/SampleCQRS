@@ -23,7 +23,7 @@ namespace SampleCQRSApplication.Data
             this.context = context;
         }
 
-        public ITeamRepository TeamsRepository
+        public ITeamRepository TeamRepository
         {
             get
             {

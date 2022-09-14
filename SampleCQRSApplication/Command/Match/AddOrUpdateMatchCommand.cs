@@ -2,12 +2,14 @@
 using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
+using SampleCQRSApplication.Request;
 
 namespace SampleCQRSApplication.Command
 {
     public class AddOrUpdateMatchCommand : IRequest<bool>
     {
-        public Match Match { get; set; }
+        public int Id { get; set; }
+        public MatchRequest Match { get; set; }
     }
     public class AddOrUpdateMatchCommandHandler : IRequestHandler<AddOrUpdateMatchCommand, bool>
     {
@@ -22,19 +24,23 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateMatchCommand request, CancellationToken cancellationToken)
         {
-            var match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Match.Id).FirstOrDefault();
-
-            if (match != null)
+            if (request.Id == 0)
             {
-                mapper.Map(request.Match, match);
-                unitOfWork.MatchRepository.Update(match);
+                unitOfWork.MatchRepository.Insert(mapper.Map(request.Match, new Match()));
                 await unitOfWork.Save();
                 return true;
             }
 
-            unitOfWork.MatchRepository.Insert(request.Match);
+            var Match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+
+            if (Match == null)
+            {
+                return false;
+            }
+
+            unitOfWork.MatchRepository.Update(mapper.Map(request.Match, Match));
             await unitOfWork.Save();
-            return await Task.FromResult(true);
+            return true;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SampleCQRSApplication.Command
 {
     public class DeleteRoundCommand : IRequest<bool>
     {
-        public Match Match { get; set; }
+        public int Id { get; set; }
     }
     public class DeleteRoundCommandHandler : IRequestHandler<DeleteRoundCommand, bool>
     {
@@ -26,11 +26,11 @@ namespace SampleCQRSApplication.Command
         }
         public async Task<bool> Handle(DeleteRoundCommand request, CancellationToken cancellationToken)
         {
-            var match = unitOfWork.MatchRepository.Get(filter: x => x.Id == request.Match.Id).FirstOrDefault();
+            var match = unitOfWork.RoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
             if (match != null)
             {
-                unitOfWork.MatchRepository.Delete(match);
+                unitOfWork.RoundRepository.Delete(match);
                 await unitOfWork.Save();
                 return await Task.FromResult(true);
             }

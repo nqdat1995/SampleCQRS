@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Command;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.Notify;
 using SampleCQRSApplication.Query;
 using SampleCQRSApplication.Request;
 
@@ -21,30 +20,32 @@ namespace SampleCQRS.Controllers
             _mediator = mediator;
             this.unitOfWork = unitOfWork;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetMatchs([FromQuery] int roundId = 0, [FromQuery] int homeTeamId = 0, [FromQuery] int visitingTeamId = 0)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMatch([FromRoute] int id)
         {
-            if (roundId != 0 || homeTeamId != 0 || visitingTeamId != 0)
-                return Ok(await _mediator.Send(new GetMatchQuery { RoundId = roundId, HomeTeamId = homeTeamId, VisitingTeamId = visitingTeamId }));
-            else
-                return Ok((await _mediator.Send(new GetMatchQuery { })).FirstOrDefault());
+            return Ok((await _mediator.Send(new GetMatchQuery { Id = id })).FirstOrDefault());
         }
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> AddMatch([FromBody] MatchRequest team)
-        //{
-        //    var result = await _mediator.Send(new AddOrUpdateMatchCommand { Match = team });
+        [HttpGet]
+        public async Task<IActionResult> GetMatchs()
+        {
+            return Ok(await _mediator.Send(new GetMatchQuery { }));
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddMatch([FromBody] MatchRequest MatchRequest)
+        {
+            var result = await _mediator.Send(new AddOrUpdateMatchCommand { Match = MatchRequest });
 
-        //    return Ok(result);
-        //}
-        //[HttpPut("{id}")]
-        //[Authorize]
-        //public async Task<IActionResult> UpdateMatch([FromRoute] int id, [FromBody] MatchRequest team)
-        //{
-        //    var result = await _mediator.Send(new AddOrUpdateMatchCommand { Match = team });
+            return Ok(result);
+        }
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMatch([FromRoute] int id, [FromBody] MatchRequest MatchRequest)
+        {
+            var result = await _mediator.Send(new AddOrUpdateMatchCommand { Id = id, Match = MatchRequest });
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteMatch([FromRoute] int id)

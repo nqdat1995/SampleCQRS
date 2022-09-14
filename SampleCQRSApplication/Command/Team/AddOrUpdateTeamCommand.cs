@@ -24,17 +24,17 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateTeamCommand request, CancellationToken cancellationToken)
         {
-            var team = unitOfWork.TeamsRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var team = unitOfWork.TeamRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
             if (team != null)
             {
                 mapper.Map(request.Team, team);
-                unitOfWork.TeamsRepository.Update(team);
+                unitOfWork.TeamRepository.Update(team);
                 await unitOfWork.Save();
                 return true;
             }
 
-            unitOfWork.TeamsRepository.Insert(mapper.Map(request.Team, new Team()));
+            unitOfWork.TeamRepository.Insert(mapper.Map(request.Team, new Team()));
             await unitOfWork.Save();
             return await Task.FromResult(true);
         }

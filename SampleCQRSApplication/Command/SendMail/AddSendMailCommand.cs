@@ -20,23 +20,25 @@ namespace SampleCQRSApplication.Command
         private readonly IUnitOfWork unitOfWork;
         private readonly IMailUtils mailUtils;
         private readonly ISHAUtils shaUtils;
-        public AddSendMailCommandHandler(IUnitOfWork unitOfWork, IMailUtils mailUtils, ISHAUtils shaUtils)
+        private readonly ICommonUtils commonUtils;
+        public AddSendMailCommandHandler(IUnitOfWork unitOfWork, IMailUtils mailUtils, ISHAUtils shaUtils, ICommonUtils commonUtils)
         {
             this.unitOfWork = unitOfWork;
             this.mailUtils = mailUtils;
             this.shaUtils = shaUtils;
+            this.commonUtils = commonUtils;
         }
 
         public async Task<bool> Handle(AddSendMailCommand request, CancellationToken cancellationToken)
         {
             var user = unitOfWork.UserRepository.Get(x => x.Email == request.Email).FirstOrDefault();
 
-            var code = Guid.NewGuid().ToString();
-            var sent = mailUtils.Send(request.Email, "Sample Subject", $"Your code is {code}");
+            var code = commonUtils.GenerateCode();
+            var sent = mailUtils.Send(user.Email, "Invitation Letter To \"Live A Life With World Cup 2022\"", $"Your code is {code}");
 
             var sendMail = new SendMail
             {
-                Email = request.Email,
+                Email = user.Email,
                 User = user,
                 ValidateCode = shaUtils.GetHash(code),
                 Sent = sent

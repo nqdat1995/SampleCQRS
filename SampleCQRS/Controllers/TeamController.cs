@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SampleCQRSApplication.Authentication;
 using SampleCQRSApplication.Command;
 using SampleCQRSApplication.Data;
-using SampleCQRSApplication.Notify;
 using SampleCQRSApplication.Query;
 using SampleCQRSApplication.Request;
 
@@ -14,40 +13,36 @@ namespace SampleCQRS.Controllers
     public class TeamController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IUnitOfWork unitOfWork;
 
         public TeamController(IMediator mediator, IUnitOfWork unitOfWork)
         {
             _mediator = mediator;
+            this.unitOfWork = unitOfWork;
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTeam([FromRoute] int id)
+        {
+            return Ok((await _mediator.Send(new GetTeamQuery { Id = id })).FirstOrDefault());
         }
         [HttpGet]
-        public async Task<IActionResult> GetTeams([FromQuery] string? name = "")
+        public async Task<IActionResult> GetTeams()
         {
-            if (string.IsNullOrEmpty(name))
-                return Ok(await _mediator.Send(new GetTeamsQuery { }));
-            else
-                return Ok((await _mediator.Send(new GetTeamsQuery
-                {
-                    Name = name
-                })).FirstOrDefault());
+            return Ok(await _mediator.Send(new GetTeamQuery { }));
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddTeam([FromBody] TeamRequest team)
+        public async Task<IActionResult> AddTeam([FromBody] TeamRequest TeamRequest)
         {
-            var result = await _mediator.Send(new AddOrUpdateTeamCommand { Team = team });
-
-            await _mediator.Publish(new PublishTeamNoify() { Message = $"Team {team.Name} created" });
+            var result = await _mediator.Send(new AddOrUpdateTeamCommand { Team = TeamRequest });
 
             return Ok(result);
         }
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateTeam([FromRoute] int id, [FromBody] TeamRequest team)
+        public async Task<IActionResult> UpdateTeam([FromRoute] int id, [FromBody] TeamRequest TeamRequest)
         {
-            var result = await _mediator.Send(new AddOrUpdateTeamCommand { Team = team });
-
-            if (result)
-                await _mediator.Publish(new PublishTeamNoify() { Message = $"Team {team.Name} updated" });
+            var result = await _mediator.Send(new AddOrUpdateTeamCommand { Id = id, Team = TeamRequest });
 
             return Ok(result);
         }
@@ -56,8 +51,6 @@ namespace SampleCQRS.Controllers
         public async Task<IActionResult> DeleteTeam([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteTeamCommand { Id = id });
-
-            await _mediator.Publish(new PublishTeamNoify() { Message = $"Team {id} deleted" });
 
             return Ok(result);
         }

@@ -2,12 +2,14 @@
 using MediatR;
 using SampleCQRSApplication.Data;
 using SampleCQRSApplication.DTO;
+using SampleCQRSApplication.Request;
 
 namespace SampleCQRSApplication.Command
 {
     public class AddOrUpdateRoundCommand : IRequest<bool>
     {
-        public Round Round { get; set; }
+        public int Id { get; set; }
+        public RoundRequest Round { get; set; }
     }
     public class AddOrUpdateRoundCommandHandler : IRequestHandler<AddOrUpdateRoundCommand, bool>
     {
@@ -22,19 +24,23 @@ namespace SampleCQRSApplication.Command
 
         public async Task<bool> Handle(AddOrUpdateRoundCommand request, CancellationToken cancellationToken)
         {
-            var round = unitOfWork.RoundRepository.Get(filter: x => x.Id == request.Round.Id).FirstOrDefault();
-
-            if (round != null)
+            if (request.Id == 0)
             {
-                mapper.Map(request.Round, round);
-                unitOfWork.RoundRepository.Update(round);
+                unitOfWork.RoundRepository.Insert(mapper.Map(request.Round, new Round()));
                 await unitOfWork.Save();
+                return true;
+            }
+
+            var Round = unitOfWork.RoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+
+            if (Round == null)
+            {
                 return false;
             }
 
-            unitOfWork.RoundRepository.Insert(request.Round);
+            unitOfWork.RoundRepository.Update(mapper.Map(request.Round, Round));
             await unitOfWork.Save();
-            return await Task.FromResult(true);
+            return true;
         }
     }
 }

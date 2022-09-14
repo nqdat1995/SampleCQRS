@@ -21,11 +21,11 @@ namespace SampleCQRSApplication.Command
         }
         public async Task<bool> Handle(DeleteTeamCommand request, CancellationToken cancellationToken)
         {
-            var team = unitOfWork.TeamsRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var team = unitOfWork.TeamRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
             if (team != null)
             {
-                unitOfWork.TeamsRepository.Delete(team);
+                unitOfWork.TeamRepository.Delete(team);
                 await unitOfWork.Save();
                 return await Task.FromResult(true);
             }

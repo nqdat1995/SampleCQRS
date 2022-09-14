@@ -30,6 +30,7 @@ builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailUtils, MailUtils>();
 builder.Services.AddSingleton<ISHAUtils, SHAUtils>();
+builder.Services.AddSingleton<ICommonUtils, CommonUtils>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>

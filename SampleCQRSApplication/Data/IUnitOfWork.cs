@@ -8,7 +8,7 @@ namespace SampleCQRSApplication.Data
         IMatchRepository MatchRepository { get; }
         IRoundRepository RoundRepository { get; }
         ISeasonRepository SeasonRepository { get; }
-        ITeamRepository TeamsRepository { get; }
+        ITeamRepository TeamRepository { get; }
         ITournamentRepository TournamentRepository { get; }
         ITournamentRoundRepository TournamentRoundRepository { get; }
         ITournamentSeasonRepository TournamentSeasonRepository { get; }
