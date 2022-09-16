@@ -31,7 +31,7 @@ namespace SampleCQRS.Controllers
             return Ok(await _mediator.Send(new GetTournamentSeasonQuery { }));
         }
         [HttpPost]
-        [Authorize]
+        ////[Authorize]
         public async Task<IActionResult> AddTournamentSeason([FromBody] TournamentSeasonRequest TournamentSeasonRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTournamentSeasonCommand { TournamentSeason = TournamentSeasonRequest });
@@ -39,7 +39,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        [Authorize]
+        ////[Authorize]
         public async Task<IActionResult> UpdateTournamentSeason([FromRoute] int id, [FromBody] TournamentSeasonRequest TournamentSeasonRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTournamentSeasonCommand { Id = id, TournamentSeason = TournamentSeasonRequest });
@@ -47,12 +47,17 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize]
+        ////[Authorize]
         public async Task<IActionResult> DeleteTournamentSeason([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteTournamentSeasonCommand { Id = id });
 
             return Ok(result);
+        }
+        [HttpGet("tournaments/{seasonId}")]
+        public async Task<IActionResult> GetTournamentBySeason([FromRoute] int seasonId)
+        {
+            return Ok(await _mediator.Send(new GetTournamentBySeasonQuery { SeasonId = seasonId }));
         }
     }
 }

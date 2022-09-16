@@ -31,7 +31,7 @@ namespace SampleCQRS.Controllers
             return Ok(await _mediator.Send(new GetTeamQuery { }));
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddTeam([FromBody] TeamRequest TeamRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTeamCommand { Team = TeamRequest });
@@ -39,7 +39,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateTeam([FromRoute] int id, [FromBody] TeamRequest TeamRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTeamCommand { Id = id, Team = TeamRequest });
@@ -47,7 +47,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteTeam([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteTeamCommand { Id = id });

@@ -23,14 +23,18 @@ namespace SampleCQRSApplication.Query
 
         public Task<IEnumerable<Tournament>> Handle(GetTournamentBySeasonQuery request, CancellationToken cancellationToken)
         {
-            var context = unitOfWork.Context();
+            //var context = unitOfWork.Context();
 
-            var result = (from s in context.Seasons
-                          join st in context.TournamentSeasons on s.Id equals st.SeasonId
-                          join t in context.Tournaments on st.TournamentId equals t.Id
-                          where s.Id == request.SeasonId
-                          select t);
-            return Task.FromResult(result.AsEnumerable());
+            //var result = (from s in context.Seasons
+            //              join st in context.TournamentSeasons on s.Id equals st.SeasonId
+            //              join t in context.Tournaments on st.TournamentId equals t.Id
+            //              where s.Id == request.SeasonId
+            //              select t);
+
+            //return Task.FromResult(result.AsEnumerable());
+
+            var tournaments = unitOfWork.TournamentSeasonRepository.Get(x => x.SeasonId == request.SeasonId, null, x => x.Tournament).Select(x => x.Tournament);
+            return Task.FromResult(tournaments);
         }
     }
 }

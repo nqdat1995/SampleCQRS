@@ -24,6 +24,12 @@ namespace SampleCQRSApplication.Command
 
         public async Task<IResultResponse> Handle(AddOrUpdateTournamentSeasonCommand request, CancellationToken cancellationToken)
         {
+            Season season = await unitOfWork.SeasonRepository.GetByID(request.TournamentSeason.SeasonId);
+            Tournament tournament = await unitOfWork.TournamentRepository.GetByID(request.TournamentSeason.TournamentId);
+
+            if (season == null || tournament == null)
+                return ResultResponse.BuildResponse(0);
+
             if(request.Id == 0)
             {
                 var temp = mapper.Map(request.TournamentSeason, new TournamentSeason());
@@ -32,14 +38,14 @@ namespace SampleCQRSApplication.Command
                 return ResultResponse.BuildResponse(temp.Id);
             }
 
-            var tournament = unitOfWork.TournamentSeasonRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var tournamentSeason = unitOfWork.TournamentSeasonRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
-            if (tournament == null)
+            if (tournamentSeason == null)
             {
                 return ResultResponse.BuildResponse(0);
             }
             
-            unitOfWork.TournamentSeasonRepository.Update(mapper.Map(request.TournamentSeason, tournament));
+            unitOfWork.TournamentSeasonRepository.Update(mapper.Map(request.TournamentSeason, tournamentSeason));
             await unitOfWork.Save();
             return ResultResponse.BuildResponse(0);
         }

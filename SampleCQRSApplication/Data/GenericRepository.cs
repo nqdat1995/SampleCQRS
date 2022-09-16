@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace SampleCQRSApplication.Data
             foreach (var includeProperty in includes)
             {
                 query = query.Include(includeProperty);
+                
             }
 
             if (orderBy != null)
@@ -46,9 +48,26 @@ namespace SampleCQRSApplication.Data
             }
         }
 
-        public virtual TEntity GetByID(object id)
+        public TEntity GetSingle(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
-            return dbSet.Find(id);
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (include != null)
+                query = include(query);
+
+            return query.FirstOrDefault();
+        }
+
+        public virtual async Task<TEntity> GetByID(object id)
+        {
+            return await dbSet.FindAsync(id);
         }
 
         public virtual void Insert(TEntity entity)

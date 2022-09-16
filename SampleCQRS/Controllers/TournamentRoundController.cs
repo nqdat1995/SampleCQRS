@@ -31,7 +31,7 @@ namespace SampleCQRS.Controllers
             return Ok(await _mediator.Send(new GetTournamentRoundQuery { }));
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddTournamentRound([FromBody] TournamentRoundRequest TournamentRoundRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTournamentRoundCommand { TournamentRound = TournamentRoundRequest });
@@ -39,7 +39,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateTournamentRound([FromRoute] int id, [FromBody] TournamentRoundRequest TournamentRoundRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateTournamentRoundCommand { Id = id, TournamentRound = TournamentRoundRequest });
@@ -47,7 +47,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteTournamentRound([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteTournamentRoundCommand { Id = id });

@@ -31,7 +31,7 @@ namespace SampleCQRS.Controllers
             return Ok(await _mediator.Send(new GetMatchQuery { }));
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddMatch([FromBody] MatchRequest MatchRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateMatchCommand { Match = MatchRequest });
@@ -39,7 +39,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateMatch([FromRoute] int id, [FromBody] MatchRequest MatchRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateMatchCommand { Id = id, Match = MatchRequest });
@@ -47,10 +47,18 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteMatch([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteMatchCommand { Id = id });
+
+            return Ok(result);
+        }
+        [HttpPost("{matchId}/bet")]
+        //[Authorize]
+        public async Task<IActionResult> PlaceABet([FromRoute] int matchId, BetRequest request)
+        {
+            var result = await _mediator.Send(new AddOrUpdateBetCommand { MatchId = matchId, Bet = request });
 
             return Ok(result);
         }

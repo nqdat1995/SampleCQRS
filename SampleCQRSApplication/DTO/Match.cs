@@ -21,7 +21,6 @@ namespace SampleCQRSApplication.DTO
         public int ScoreAwayTeam { get; set; }
         public float RateHomeTeam { get; set; }
         public float RateAwayTeam { get; set; }
-        public MatchResult Decision { get; set; }
         public DateTime MatchDate { get; set; }
     }
 }

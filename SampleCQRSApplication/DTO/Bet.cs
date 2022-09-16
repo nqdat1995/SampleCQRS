@@ -20,5 +20,6 @@ namespace SampleCQRSApplication.DTO
         public int TeamId { get; set; }
         [ForeignKey(nameof(TeamId))]
         public virtual Team Team { get; set; }
+        public bool IsDraw { get; set; }
     }
 }

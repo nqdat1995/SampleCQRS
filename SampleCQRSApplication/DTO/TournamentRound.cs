@@ -12,9 +12,9 @@ namespace SampleCQRSApplication.DTO
         public int Id { get; set; }
         public int TournamentId { get; set; }
         [ForeignKey(nameof(TournamentId))]
-        public virtual ICollection<Tournament> Tournaments { get; set; }
+        public virtual Tournament Tournament { get; set; }
         public int RoundId { get; set; }
         [ForeignKey(nameof(RoundId))]
-        public virtual ICollection<Round>  Rounds { get; set; }
+        public virtual Round  Round { get; set; }
     }
 }

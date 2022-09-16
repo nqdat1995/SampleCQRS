@@ -66,7 +66,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-builder.Services.AddValidatorsFromAssemblyContaining<ApplicationModule>();
+builder.Services.AddValidatorsFromAssemblyContaining<ApplicationModule>(ServiceLifetime.Transient);
 
 //builder.Services.AddMediatR(typeof(AddOrUpdateTeamCommandHandler).Assembly);
 // Call UseServiceProviderFactory on the Host sub property 
@@ -76,8 +76,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     //containerBuilder.RegisterMediatR(typeof(Program).Assembly);
     containerBuilder.RegisterMediatR(typeof(ApplicationModule).Assembly);
-    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
-    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
+    containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("Default")));
+    //containerBuilder.RegisterModule(new ApplicationModule(builder.Configuration.GetConnectionString("MySQL")));
 });
 
 var app = builder.Build();

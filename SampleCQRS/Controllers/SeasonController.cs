@@ -26,18 +26,13 @@ namespace SampleCQRS.Controllers
         {
             return Ok((await _mediator.Send(new GetSeasonQuery { Id = id })).FirstOrDefault());
         }
-        [HttpGet("{id}/tournaments")]
-        public async Task<IActionResult> GetTournamentBySeason([FromRoute] int id)
-        {
-            return Ok(await _mediator.Send(new GetTournamentBySeasonQuery { SeasonId = id }));
-        }
         [HttpGet]
         public async Task<IActionResult> GetSeasons()
         {
             return Ok(await _mediator.Send(new GetSeasonQuery { }));
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddSeason([FromBody] SeasonRequest seasonRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateSeasonCommand { Season = seasonRequest });
@@ -45,7 +40,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UpdateSeason([FromRoute] int id, [FromBody] SeasonRequest seasonRequest)
         {
             var result = await _mediator.Send(new AddOrUpdateSeasonCommand { Id = id, Season = seasonRequest });
@@ -53,7 +48,7 @@ namespace SampleCQRS.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> DeleteSeason([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteSeasonCommand { Id = id });

@@ -24,7 +24,13 @@ namespace SampleCQRSApplication.Command
 
         public async Task<IResultResponse> Handle(AddOrUpdateTournamentRoundCommand request, CancellationToken cancellationToken)
         {
-            if(request.Id == 0)
+            Round round = await unitOfWork.RoundRepository.GetByID(request.TournamentRound.RoundId);
+            Tournament tournament = await unitOfWork.TournamentRepository.GetByID(request.TournamentRound.TournamentId);
+
+            if (round == null || tournament == null)
+                return ResultResponse.BuildResponse(0);
+
+            if (request.Id == 0)
             {
                 var temp = mapper.Map(request.TournamentRound, new TournamentRound());
                 unitOfWork.TournamentRoundRepository.Insert(temp);
@@ -32,16 +38,16 @@ namespace SampleCQRSApplication.Command
                 return ResultResponse.BuildResponse(temp.Id);
             }
 
-            var tournament = unitOfWork.TournamentRoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
+            var tournamentRound = unitOfWork.TournamentRoundRepository.Get(filter: x => x.Id == request.Id).FirstOrDefault();
 
-            if (tournament == null)
+            if (tournamentRound == null)
             {
                 return ResultResponse.BuildResponse(0);
             }
             
-            unitOfWork.TournamentRoundRepository.Update(mapper.Map(request.TournamentRound, tournament));
+            unitOfWork.TournamentRoundRepository.Update(mapper.Map(request.TournamentRound, tournamentRound));
             await unitOfWork.Save();
-            return ResultResponse.BuildResponse(tournament.Id);
+            return ResultResponse.BuildResponse(tournamentRound.Id);
         }
     }
 }
