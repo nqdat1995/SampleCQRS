@@ -139,12 +139,7 @@ namespace SampleCQRSApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoundId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoundId");
 
                     b.ToTable("Rounds");
                 });
@@ -252,12 +247,7 @@ namespace SampleCQRSApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TournamentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TournamentId");
 
                     b.ToTable("Tournaments");
                 });
@@ -277,6 +267,10 @@ namespace SampleCQRSApplication.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoundId");
+
+                    b.HasIndex("TournamentId");
 
                     b.ToTable("TournamentRounds");
                 });
@@ -381,13 +375,6 @@ namespace SampleCQRSApplication.Migrations
                     b.Navigation("VisitingTeam");
                 });
 
-            modelBuilder.Entity("SampleCQRSApplication.DTO.Round", b =>
-                {
-                    b.HasOne("SampleCQRSApplication.DTO.TournamentRound", null)
-                        .WithMany("Rounds")
-                        .HasForeignKey("RoundId");
-                });
-
             modelBuilder.Entity("SampleCQRSApplication.DTO.SendMail", b =>
                 {
                     b.HasOne("SampleCQRSApplication.Authentication.User", "User")
@@ -399,11 +386,23 @@ namespace SampleCQRSApplication.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SampleCQRSApplication.DTO.Tournament", b =>
+            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
                 {
-                    b.HasOne("SampleCQRSApplication.DTO.TournamentRound", null)
-                        .WithMany("Tournaments")
-                        .HasForeignKey("TournamentId");
+                    b.HasOne("SampleCQRSApplication.DTO.Round", "Round")
+                        .WithMany()
+                        .HasForeignKey("RoundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SampleCQRSApplication.DTO.Tournament", "Tournament")
+                        .WithMany()
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Round");
+
+                    b.Navigation("Tournament");
                 });
 
             modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentSeason", b =>
@@ -461,13 +460,6 @@ namespace SampleCQRSApplication.Migrations
                     b.Navigation("HomeMatches");
 
                     b.Navigation("VisitingMatches");
-                });
-
-            modelBuilder.Entity("SampleCQRSApplication.DTO.TournamentRound", b =>
-                {
-                    b.Navigation("Rounds");
-
-                    b.Navigation("Tournaments");
                 });
 #pragma warning restore 612, 618
         }

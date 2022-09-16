@@ -54,5 +54,15 @@ namespace SampleCQRS.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{tournamentId}/teams")]
+        public async Task<IActionResult> GetTeamByTournament([FromRoute] int tournamentId)
+        {
+            return Ok(await _mediator.Send(new GetTeamByTournamentQuery { TournamentId = tournamentId }));
+        }
+        [HttpGet("{tournamentId}/rounds")]
+        public async Task<IActionResult> GetRoundByTournament([FromRoute] int tournamentId)
+        {
+            return Ok(await _mediator.Send(new GetRoundByTournamentQuery { TournamentId = tournamentId }));
+        }
     }
 }

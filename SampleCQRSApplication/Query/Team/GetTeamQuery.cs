@@ -24,7 +24,7 @@ namespace SampleCQRSApplication.Query
         {
             if (request.Id == 0)
                 return Task.FromResult(unitOfWork.TeamRepository.Get());
-            return Task.FromResult(unitOfWork.TeamRepository.Get(x => x.Id == request.Id));
+            return Task.FromResult(unitOfWork.TeamRepository.Get(x => x.Id == request.Id, null, x => x.HomeMatches, x => x.VisitingMatches));
         }
     }
 }

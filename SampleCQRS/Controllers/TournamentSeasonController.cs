@@ -54,10 +54,5 @@ namespace SampleCQRS.Controllers
 
             return Ok(result);
         }
-        [HttpGet("tournaments/{seasonId}")]
-        public async Task<IActionResult> GetTournamentBySeason([FromRoute] int seasonId)
-        {
-            return Ok(await _mediator.Send(new GetTournamentBySeasonQuery { SeasonId = seasonId }));
-        }
     }
 }
