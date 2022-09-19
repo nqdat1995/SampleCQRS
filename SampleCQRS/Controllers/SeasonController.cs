@@ -60,5 +60,13 @@ namespace SampleCQRS.Controllers
         {
             return Ok(await _mediator.Send(new GetTournamentBySeasonQuery { SeasonId = seasonId }));
         }
+        [HttpPost("{seasonId}/tournament")]
+        //[Authorize]
+        public async Task<IActionResult> AddTournamentBySeason([FromRoute] int seasonId, [FromBody] TournamentRequest tournament)
+        {
+            var result = await _mediator.Send(new AddOrUpdateTournamentBySeasonCommand { Tournament = tournament, SeasonId = seasonId });
+
+            return Ok(result);
+        }
     }
 }

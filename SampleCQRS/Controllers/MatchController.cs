@@ -26,9 +26,15 @@ namespace SampleCQRS.Controllers
             return Ok((await _mediator.Send(new GetMatchQuery { Id = id })).FirstOrDefault());
         }
         [HttpGet]
-        public async Task<IActionResult> GetMatchs()
+        public async Task<IActionResult> GetMatches()
         {
             return Ok(await _mediator.Send(new GetMatchQuery { }));
+        }
+        [HttpPost("filter")]
+        //[Authorize]
+        public async Task<IActionResult> GetMatchesByFilter([FromBody] GetMatchesByFilterQuery request)
+        {
+            return Ok(await _mediator.Send(request));
         }
         [HttpPost]
         //[Authorize]

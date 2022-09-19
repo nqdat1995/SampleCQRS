@@ -33,7 +33,7 @@ namespace SampleCQRSApplication.Authentication
             var user = await mediator.Send(new GetUserQueryByInfo { Username = model.Username, Password = model.Password });
 
             // return null if user not found
-            if (user == null) return null;
+            if (user == null || user.Status == UserStatus.Activated) return null;
 
             // authentication successful so generate jwt token
             var token = _jwtUtils.GenerateJwtToken(user);

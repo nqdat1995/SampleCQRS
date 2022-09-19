@@ -64,5 +64,19 @@ namespace SampleCQRS.Controllers
         {
             return Ok(await _mediator.Send(new GetRoundByTournamentQuery { TournamentId = tournamentId }));
         }
+        [HttpPost("{tournamentId}/round")]
+        public async Task<IActionResult> AddRoundByTournament([FromRoute] int tournamentId, [FromBody] RoundRequest round)
+        {
+            var result = await _mediator.Send(new AddOrUpdateRoundByTournamentCommand { Round = round, TournamentId = tournamentId });
+
+            return Ok(result);
+        }
+        [HttpPost("{tournamentId}/team")]
+        public async Task<IActionResult> AddTeamByTournament([FromRoute] int tournamentId, [FromBody] TeamRequest team)
+        {
+            var result = await _mediator.Send(new AddOrUpdateTeamByTournamentCommand { Team = team, TournamentId = tournamentId });
+
+            return Ok(result);
+        }
     }
 }
